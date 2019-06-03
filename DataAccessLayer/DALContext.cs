@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 
 namespace DataAccessLayer
 {
+    #region Mappers
     class Mapper
     {
         public void assert(bool test, string message)
@@ -224,10 +225,10 @@ namespace DataAccessLayer
             return rv;
         }
     }
+    #endregion Mappers
 
 
-
-    public  class ContextDAL
+    public class ContextDAL
     {
         private System.Data.SqlClient.SqlConnection Con;
 
@@ -426,33 +427,151 @@ namespace DataAccessLayer
         public int CreateRole(string Role)
         {
             int rv = 0;
+            try
+            {
+
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("CreateRole", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@RoleID", 0);
+                    command.Parameters["@RoleID"].Direction = System.Data.ParameterDirection.InputOutput;
+                    command.Parameters.AddWithValue("@Role", Role);
+
+                    command.ExecuteNonQuery();
+
+                    rv = Convert.ToInt32(command.Parameters["@RoleID"].Value);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
             return rv;
         }
 
         public void deleteRole(int RoleID)
         {
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("DeleteRole", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@RoleID", RoleID);
 
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
         }
 
         public void JustUpdateRole(int RoleID, string NewRole)
         {
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("JustUpdateRole", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@RoleID", RoleID);
+                    command.Parameters.AddWithValue("@Role", newRole);
 
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
         }
 
         public int SafeUpdateRole(int RoleID, string OldRole, string NewRole)
         {
             int rv = 0;
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("SafeUpdateRole", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@CRoleID", RoleID);
+                    command.Parameters.AddWithValue("@NewRole", NewRole);
+                    command.Parameters.AddWithValue("@OldRole", OldRole);
+
+                    rv = command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
             return rv;
         }
 
         public RoleDAL FindRoleByID(int RoleID)
         {
             RoleDAL rv = null;
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("FindRoleByID", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@RoleID", RoleID);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        RoleMapper mapper = new RoleMapper(reader);
+                        if (reader.Read())
+                        {
+                            rv = mapper.ToRole(reader);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
             return rv;
         }
         public List<RoleDAL> GetRoles(int skip, int take)
         {
             List<RoleDAL> rv = new List<RoleDAL>();
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("GetRoles", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@skip", skip);
+                    command.Parameters.AddWithValue("@take", take);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        RoleMapper mapper = new RoleMapper(reader);
+                        while (reader.Read())
+                        {
+                            RoleDAL c = mapper.ToRole(reader);
+                            rv.Add(c);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
             return rv;
         }
         #endregion Roles
@@ -461,28 +580,138 @@ namespace DataAccessLayer
         public int CreateUser(string EMailAddress, string Name, string Password, string Hash, int RoleID)
         {
             int rv = 0;
+            try
+            {
+
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("CreateUser", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@UserID", 0);
+                    command.Parameters["@UserID"].Direction = System.Data.ParameterDirection.InputOutput;
+                    command.Parameters.AddWithValue("@EMailAddress", EMailAddress);
+                    command.Parameters.AddWithValue("@Name", Name);
+                    command.Parameters.AddWithValue("@Password", Password);
+                    command.Parameters.AddWithValue("@Hash", Hash);
+                    command.Parameters.AddWithValue("@RoleID", RoleID);
+                    command.ExecuteNonQuery();
+
+                    rv = Convert.ToInt32(command.Parameters["@RoleID"].Value);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
             return rv;
         }
 
         public void deleteUser(int UserID)
         {
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("DeleteUser", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@UserID", UserID);
 
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
         }
 
-        public void JustUpdateUser(int UserID, string NewEMailAddress, string NewName, string NewPassword, string NewHash, int NewRoldID)
+        public void JustUpdateUser(int UserID, string NewEMailAddress, string NewName, string NewPassword, string NewHash, int NewRoleID)
         {
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("JustUpdateUser", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@UserID", 0);
+                    
+                    command.Parameters.AddWithValue("@EMailAddress", NewEMailAddress);
+                    command.Parameters.AddWithValue("@Name", NewName);
+                    command.Parameters.AddWithValue("@Password", NewPassword);
+                    command.Parameters.AddWithValue("@Hash", NewHash);
+                    command.Parameters.AddWithValue("@RoleID", NewRoleID);
 
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
         }
 
-        public int SafeUpdateUser(int UserID, string OldEMailAddress, string OldName, string OldPassword, string OldHash, int OldRoleID, string NewEMailAddress, string NewName, string NewPassword, string NewHash, int NewRoldID)
+        public int SafeUpdateUser(int UserID, string OldEMailAddress, string OldName, string OldPassword, string OldHash, int OldRoleID, string NewEMailAddress, string NewName, string NewPassword, string NewHash, int NewRoleID)
         {
             int rv = 0;
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("SafeUpdateUser", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@UserID", 0);
+
+                    command.Parameters.AddWithValue("@NewEMailAddress", NewEMailAddress);
+                    command.Parameters.AddWithValue("@NewName", NewName);
+                    command.Parameters.AddWithValue("@NewPassword", NewPassword);
+                    command.Parameters.AddWithValue("@NewHash", NewHash);
+                    command.Parameters.AddWithValue("@NewRoleID", NewRoleID);
+                    command.Parameters.AddWithValue("@OldEMailAddress", OldEMailAddress);
+                    command.Parameters.AddWithValue("@OldName", OldName);
+                    command.Parameters.AddWithValue("@OldPassword", OldPassword);
+                    command.Parameters.AddWithValue("@OldHash", OldHash);
+                    command.Parameters.AddWithValue("@OldRoleID", OldRoleID);
+
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
             return rv;
         }
 
         public UserDAL FindUserByID(int UserID)
         {
             UserDAL rv = null;
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("FindUserByID", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@UserID", UserID);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        UserMapper mapper = new UserMapper(reader);
+                        if (reader.Read())
+                        {
+                            rv = mapper.ToUser(reader);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
             return rv;
         }
         public List<UserDAL> GetUsers(int skip, int take)
@@ -604,7 +833,7 @@ namespace DataAccessLayer
             return rv;
 
         }
-        public List<OfferDAL> GetProductsRelatedToCategory(int CategoryID)
+        public List<ProductDAL> GetProductsRelatedToCategory(int CategoryID)
         {
             List<ProductDAL> rv = new List<ProductDAL>();
             return rv;
