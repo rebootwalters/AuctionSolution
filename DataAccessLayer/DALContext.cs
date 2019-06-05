@@ -17,6 +17,24 @@ namespace DataAccessLayer
                 throw new Exception(message);
             }
         }
+        public string GetStringOrNull( System.Data.SqlClient.SqlDataReader r,int i)
+        {
+            string rv = null;
+            if (!r.IsDBNull(i))
+            {
+                rv = r.GetString(i);
+            }
+            return rv;
+        }
+        public int GetInt32OrZero(System.Data.SqlClient.SqlDataReader r, int i)
+        {
+            int rv = 0;
+            if (!r.IsDBNull(i))
+            {
+                rv = r.GetInt32(i);
+            }
+            return rv;
+        }
     }
 
     class CategoryMapper : Mapper
@@ -33,8 +51,8 @@ namespace DataAccessLayer
         public CategoryDAL ToCategory(SqlDataReader r)
         {
             CategoryDAL rv = new CategoryDAL();
-            rv.CategoryID = r.GetInt32(CategoryIdOrdinal);
-            rv.CategoryName = r.GetString(CategoryOrdinal);
+            rv.CategoryID = GetInt32OrZero(r,CategoryIdOrdinal);
+            rv.CategoryName = GetStringOrNull(r,CategoryOrdinal);
 
             return rv;
         }
@@ -54,8 +72,8 @@ namespace DataAccessLayer
         public RoleDAL ToRole(SqlDataReader r)
         {
            RoleDAL rv = new RoleDAL();
-            rv.RoleID = r.GetInt32(RoleIdOrdinal);
-            rv.RoleName = r.GetString(RoleOrdinal);
+            rv.RoleID = GetInt32OrZero(r,RoleIdOrdinal);
+            rv.RoleName = GetStringOrNull(r,RoleOrdinal);
 
             return rv;
         }
@@ -85,20 +103,20 @@ namespace DataAccessLayer
             assert(4 == HashOrdinal, "Hash is not column 4 as expected");
             RoleIdOrdinal = r.GetOrdinal("RoleID");
             assert(5 == RoleIdOrdinal, "RoleID is not column 5 as expected");
-            RoleNameOrdinal = r.GetOrdinal("RoleName");
-            assert(6 == RoleNameOrdinal, "RoleName is not column 6 as expected");
+            RoleNameOrdinal = r.GetOrdinal("Role");
+            assert(6 == RoleNameOrdinal, "Role is not column 6 as expected");
 
         }
         public UserDAL ToUser(SqlDataReader r)
         {
             UserDAL rv = new UserDAL();
-            rv.UserID = r.GetInt32(UserIdOrdinal);
-            rv.EMailAddress = r.GetString(EmailAddressOrdinal);
-            rv.Name = r.GetString(NameOrdinal);
-            rv.Password = r.GetString(PasswordOrdinal);
-            rv.Hash = r.GetString(HashOrdinal);
-            rv.RoleID = r.GetInt32(RoleIdOrdinal);
-            rv.RoleName = r.GetString(RoleNameOrdinal);
+            rv.UserID = GetInt32OrZero(r,UserIdOrdinal);
+            rv.EMailAddress = GetStringOrNull(r,EmailAddressOrdinal);
+            rv.Name = GetStringOrNull(r,NameOrdinal);
+            rv.Password = GetStringOrNull(r,PasswordOrdinal);
+            rv.Hash = GetStringOrNull(r,HashOrdinal);
+            rv.RoleID = GetInt32OrZero(r,RoleIdOrdinal);
+            rv.RoleName = GetStringOrNull(r,RoleNameOrdinal);
 
             return rv;
         }
@@ -141,26 +159,26 @@ namespace DataAccessLayer
             CategoryOrdinal = r.GetOrdinal("Category");
             assert( 8== CategoryOrdinal, "Category  is not column 8 as expected");
             SellerNameOrdinal = r.GetOrdinal("SellerName");
-            assert( 9 == SellerNameOrdinal, "SellerName is not column 9 as expected");
-            SellerEMailAddressOrdinal = r.GetOrdinal("SellerEMailAddress");
-            assert( 10== SellerEMailAddressOrdinal, "SellerEMailAddress is not column 10 as expected");
+            assert( 10 == SellerNameOrdinal, "SellerName is not column 9 as expected");
+            SellerEMailAddressOrdinal = r.GetOrdinal("SellerEMail");
+            assert( 9== SellerEMailAddressOrdinal, "SellerEMailAddress is not column 10 as expected");
 
         }
         public ProductDAL ToProduct(SqlDataReader r)
         {
             ProductDAL rv = new ProductDAL();
-            rv.ProductID = r.GetInt32(ProductIdOrdinal);
-            rv.CategoryID = r.GetInt32(CategoryIdOrdinal);
-            rv.SellerID = r.GetInt32(SellerIdOrdinal);
-            rv.ProductName = r.GetString(ProductNameOrdinal);
+            rv.ProductID = GetInt32OrZero(r,ProductIdOrdinal);
+            rv.CategoryID = GetInt32OrZero(r,CategoryIdOrdinal);
+            rv.SellerID = GetInt32OrZero(r,SellerIdOrdinal);
+            rv.ProductName = GetStringOrNull(r,ProductNameOrdinal);
             
-            rv.Description = r.GetString(DescriptionOrdinal);
+            rv.Description = GetStringOrNull(r,DescriptionOrdinal);
             rv.ReservePrice = r.GetDecimal(ReservePriceOrdinal);
-            rv.WinningOfferID = r.GetInt32(WinningOfferIdOrdinal);
-            rv.Comments= r.GetString(CommentsOrdinal);
-            rv.CategoryName  = r.GetString(CategoryOrdinal);
-            rv.SellerName = r.GetString(SellerNameOrdinal);
-            rv.SellerEMailAddress = r.GetString(SellerEMailAddressOrdinal);
+            rv.WinningOfferID = GetInt32OrZero(r,WinningOfferIdOrdinal);
+            rv.Comments= GetStringOrNull(r,CommentsOrdinal);
+            rv.CategoryName  = GetStringOrNull(r,CategoryOrdinal);
+            rv.SellerName = GetStringOrNull(r,SellerNameOrdinal);
+            rv.SellerEMailAddress = GetStringOrNull(r,SellerEMailAddressOrdinal);
 
             return rv;
         }
@@ -200,27 +218,27 @@ namespace DataAccessLayer
 
             ProductNameOrdinal = r.GetOrdinal("ProductName");
             assert(7 == ProductNameOrdinal, "ProductName is not column 7 as expected");
-            BuyerNameOrdinal = r.GetOrdinal("SellerName");
+            BuyerNameOrdinal = r.GetOrdinal("BuyerName");
             assert(8 == BuyerNameOrdinal, "BuyerName is not column 8 as expected");
-            BuyerEMailAddressOrdinal = r.GetOrdinal("BuyerEMailAddress");
+            BuyerEMailAddressOrdinal = r.GetOrdinal("EMailAddress");
             assert(9 == BuyerEMailAddressOrdinal, "BuyerEMailAddress is not column 9 as expected");
 
         }
-        public OfferDAL ToProduct(SqlDataReader r)
+        public OfferDAL ToOffer(SqlDataReader r)
         {
             OfferDAL rv = new OfferDAL();
-            rv.OfferID = r.GetInt32(OfferIdOrdinal);
-            rv.ProductID = r.GetInt32(ProductIdOrdinal);
-            rv.BuyerID = r.GetInt32(BuyerIdOrdinal);
-            rv.OfferState = r.GetInt32(OfferStateOrdinal);
+            rv.OfferID = GetInt32OrZero(r,OfferIdOrdinal);
+            rv.ProductID = GetInt32OrZero(r,ProductIdOrdinal);
+            rv.BuyerID = GetInt32OrZero(r,BuyerIdOrdinal);
+            rv.OfferState = GetInt32OrZero(r,OfferStateOrdinal);
             rv.OfferPrice = r.GetDecimal(OfferPriceOrdinal);
             rv.ExpireDate = r.GetDateTime(ExpireDateOrdinal);
-            rv.Comments = r.GetString(CommentsOrdinal);
-
-            rv.ProductName = r.GetString(ProductNameOrdinal);
-
-            rv.BuyerName = r.GetString(BuyerNameOrdinal);
-            rv.BuyerEmailAddress = r.GetString(BuyerEMailAddressOrdinal);
+           
+            rv.Comments = GetStringOrNull(r,CommentsOrdinal);
+            rv.ProductName = GetStringOrNull(r,ProductNameOrdinal);
+            
+            rv.BuyerName = GetStringOrNull(r,BuyerNameOrdinal);
+            rv.BuyerEmailAddress = GetStringOrNull(r,BuyerEMailAddressOrdinal);
 
             return rv;
         }
@@ -228,8 +246,13 @@ namespace DataAccessLayer
     #endregion Mappers
 
 
-    public class ContextDAL
+    public class ContextDAL:  IDisposable
     {
+        public void Dispose()
+        {
+            Con.Dispose();
+        }
+
         private System.Data.SqlClient.SqlConnection Con;
 
         private void Log(Exception ex)
@@ -267,6 +290,16 @@ namespace DataAccessLayer
                     Con.Open();
                 }
             }
+        }
+
+        public SqlDataReader ExecuteCommand(SqlCommand cmd)
+        {
+            if (Con != cmd.Connection )
+            {
+                cmd.Connection = Con;
+            }
+            EnsureConnected();
+            return cmd.ExecuteReader();
         }
 
         #region Categories
@@ -480,7 +513,7 @@ namespace DataAccessLayer
                 {
                     command.CommandType = System.Data.CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@RoleID", RoleID);
-                    command.Parameters.AddWithValue("@Role", newRole);
+                    command.Parameters.AddWithValue("@Role", NewRole);
 
                     command.ExecuteNonQuery();
                 }
@@ -596,7 +629,7 @@ namespace DataAccessLayer
                     command.Parameters.AddWithValue("@RoleID", RoleID);
                     command.ExecuteNonQuery();
 
-                    rv = Convert.ToInt32(command.Parameters["@RoleID"].Value);
+                    rv = Convert.ToInt32(command.Parameters["@UserID"].Value);
                 }
             }
             catch (Exception ex)
@@ -635,7 +668,7 @@ namespace DataAccessLayer
                 using (SqlCommand command = new SqlCommand("JustUpdateUser", Con))
                 {
                     command.CommandType = System.Data.CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@UserID", 0);
+                    command.Parameters.AddWithValue("@UserID", UserID);
                     
                     command.Parameters.AddWithValue("@EMailAddress", NewEMailAddress);
                     command.Parameters.AddWithValue("@Name", NewName);
@@ -717,12 +750,62 @@ namespace DataAccessLayer
         public List<UserDAL> GetUsers(int skip, int take)
         {
             List<UserDAL> rv = new List<UserDAL>();
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("GetUsers", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@skip", skip);
+                    command.Parameters.AddWithValue("@take", take);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        UserMapper mapper = new UserMapper(reader);
+                        while (reader.Read())
+                        {
+                            UserDAL c = mapper.ToUser(reader);
+                            rv.Add(c);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
             return rv;
         }
 
-        public List<UserDAL> GetUsersRelatedToRole(int RoleID)
+        public List<UserDAL> GetUsersRelatedToRole(int skip, int take,int RoleID)
         {
             List<UserDAL> rv = new List<UserDAL>();
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("GetUsersRelatedToRole", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@skip", skip);
+                    command.Parameters.AddWithValue("@take", take);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        UserMapper mapper = new UserMapper(reader);
+                        while (reader.Read())
+                        {
+                            UserDAL c = mapper.ToUser(reader);
+                            rv.Add(c);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
             return rv;
         }
         #endregion Users
@@ -731,53 +814,282 @@ namespace DataAccessLayer
         public int CreateOffer(int ProductId, int BuyerId, decimal OfferPrice, int OfferState, DateTime ExpireDate, string Comments)
         {
             int rv = 0;
+            try
+            {
+
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("CreateOffer", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@OfferID", 0);
+                    command.Parameters["@OfferID"].Direction = System.Data.ParameterDirection.InputOutput;
+                    command.Parameters.AddWithValue("@ProductID", ProductId);
+                    command.Parameters.AddWithValue("@BuyerID", BuyerId);
+                    command.Parameters.AddWithValue("@OfferPrice", OfferPrice);
+                    command.Parameters.AddWithValue("@OfferState", OfferState);
+                    command.Parameters.AddWithValue("@ExpireDate", ExpireDate);
+                    if (null == Comments)
+                    {
+                        command.Parameters.AddWithValue("@Comments", DBNull.Value);
+                    }
+                    else
+                    { 
+                    command.Parameters.AddWithValue("@Comments", Comments);
+                    }
+                    command.ExecuteNonQuery();
+
+                    rv = Convert.ToInt32(command.Parameters["@OfferID"].Value);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
             return rv;
         }
 
         public void deleteOffer(int OfferID)
         {
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("DeleteOffer", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@OfferID", OfferID);
 
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
         }
 
         public void JustUpdateOffer(int OfferId, int NewProductId, int NewBuyerId, decimal NewOfferPrice, int NewOfferState, DateTime NewExpireDate, string NewComments)
         {
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("JustUpdateOffer", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@OfferID", OfferId);
 
+                    command.Parameters.AddWithValue("@ProductID", NewProductId);
+                    command.Parameters.AddWithValue("@BuyerID", NewBuyerId);
+                    command.Parameters.AddWithValue("@OfferPrice", NewOfferPrice);
+                    command.Parameters.AddWithValue("@OfferState", NewOfferState);
+                    command.Parameters.AddWithValue("@ExpireDate", NewExpireDate);
+                    command.Parameters.AddWithValue("@Comments", NewComments);
+
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
         }
 
         public int SafeUpdateOffer(int OfferId, int OldProductId, int OldBuyerId, decimal OldOfferPrice, int OldOfferState, DateTime OldExpireDate, string OldComments,
                                                 int NewProductId, int NewBuyerId, decimal NewOfferPrice, int NewOfferState, DateTime NewExpireDate, string NewComments)
         {
             int rv = 0;
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("SafeUpdateOffer", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@OfferID", OfferId);
+
+                    command.Parameters.AddWithValue("@NewProductID", NewProductId);
+                    command.Parameters.AddWithValue("@NewBuyerID", NewBuyerId);
+                    command.Parameters.AddWithValue("@NewOfferPrice", NewOfferPrice);
+                    command.Parameters.AddWithValue("@NewOfferState", NewOfferState);
+                    command.Parameters.AddWithValue("@NewExpireDate", NewExpireDate);
+                    command.Parameters.AddWithValue("@NewComments", NewComments);
+
+                    command.Parameters.AddWithValue("@OldProductID", OldProductId);
+                    command.Parameters.AddWithValue("@OldBuyerID", OldBuyerId);
+                    command.Parameters.AddWithValue("@OldOfferPrice", OldOfferPrice);
+                    command.Parameters.AddWithValue("@OldOfferState", OldOfferState);
+                    command.Parameters.AddWithValue("@OldExpireDate", OldExpireDate);
+                    command.Parameters.AddWithValue("@OldComments", OldComments);
+
+                    rv = command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
             return rv;
         }
 
         public OfferDAL FindOfferByID(int OfferID)
         {
             OfferDAL rv = null;
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("FindOfferByID", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@OfferID", OfferID);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        OfferMapper mapper = new OfferMapper(reader);
+                        if (reader.Read())
+                        {
+                            rv = mapper.ToOffer(reader);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
             return rv;
         }
         public List<OfferDAL> GetOffers(int skip, int take)
         {
             List<OfferDAL> rv = new List<OfferDAL>();
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("GetOffers", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@skip", skip);
+                    command.Parameters.AddWithValue("@take", take);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        OfferMapper mapper = new OfferMapper(reader);
+                        while (reader.Read())
+                        {
+                            OfferDAL c = mapper.ToOffer(reader);
+                            rv.Add(c);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
             return rv;
         }
 
-        public List<OfferDAL> GetOffersRelatedToBuyer(int BuyerID)
+        public List<OfferDAL> GetOffersRelatedToBuyer(int BuyerID,int skip,int take)
         {
             List<OfferDAL> rv = new List<OfferDAL>();
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("GetOffersRelatedToBuyer", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@skip", skip);
+                    command.Parameters.AddWithValue("@take", take);
+                    command.Parameters.AddWithValue("@BuyerID", BuyerID);
+
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        OfferMapper mapper = new OfferMapper(reader);
+                        while (reader.Read())
+                        {
+                            OfferDAL c = mapper.ToOffer(reader);
+                            rv.Add(c);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
             return rv;
         }
 
-        public List<OfferDAL> GetOffersRelatedToBuyerEMail(string EMailAddress)
+        public List<OfferDAL> GetOffersRelatedToBuyerEMail(string EMailAddress,int skip, int take)
         {
             List<OfferDAL> rv = new List<OfferDAL>();
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = 
+                    new SqlCommand("GetOffersRelatedToEMail", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@skip", skip);
+                    command.Parameters.AddWithValue("@take", take);
+                    command.Parameters.AddWithValue("@EMail", EMailAddress);
+
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        OfferMapper mapper = new OfferMapper(reader);
+                        while (reader.Read())
+                        {
+                            OfferDAL c = mapper.ToOffer(reader);
+                            rv.Add(c);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
             return rv;
         }
 
 
-        public List<OfferDAL> GetOffersRelatedToProduct(int ProductID)
+        public List<OfferDAL> GetOffersRelatedToProduct(int ProductID,int skip, int take)
         {
             List<OfferDAL> rv = new List<OfferDAL>();
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("GetOffersRelatedToProduct", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@skip", skip);
+                    command.Parameters.AddWithValue("@take", take);
+                    command.Parameters.AddWithValue("@ProductID", ProductID);
+
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        OfferMapper mapper = new OfferMapper(reader);
+                        while (reader.Read())
+                        {
+                            OfferDAL c = mapper.ToOffer(reader);
+                            rv.Add(c);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
             return rv;
 
         }
@@ -786,59 +1098,351 @@ namespace DataAccessLayer
         #endregion offers
 
         #region products
-        public int CreateProduct( int CategoryID,int SellerID, string ProductName, string Description, decimal ReservePrice, int WinningOfferID, string Comments)
+        public int CreateProduct( int CategoryID,int SellerID, string ProductName, string Description, decimal ReservePrice, int? WinningOfferID, string Comments)
         {
             int rv = 0;
+            try
+            {
+
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("CreateProduct", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@ProductID", 0);
+                    command.Parameters["@ProductID"].Direction = System.Data.ParameterDirection.InputOutput;
+                    command.Parameters.AddWithValue("@CategoryID", CategoryID);
+                    command.Parameters.AddWithValue("@SellerID", SellerID);
+                    command.Parameters.AddWithValue("@Name", ProductName);
+                    command.Parameters.AddWithValue("@Description", Description);
+                    command.Parameters.AddWithValue("@ReservePrice", ReservePrice);
+                    if (WinningOfferID.HasValue)
+                    {
+                        command.Parameters.AddWithValue("@WinningOfferID", WinningOfferID);
+                    }
+                    else
+                    {
+                        command.Parameters.AddWithValue("@WinningOfferID",
+                            DBNull.Value);
+                    }
+
+                    if (null != Comments)
+                    {
+                        command.Parameters.AddWithValue("@Comments", Comments);
+                    }
+                    else
+                    {
+                        command.Parameters.AddWithValue("@Comments", "");
+                    }
+                    command.ExecuteNonQuery();
+
+                    rv = Convert.ToInt32(command.Parameters["@ProductID"].Value);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
             return rv;
         }
 
         public void deleteProduct(int ProductID)
         {
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("DeleteProduct", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@ProductID", ProductID);
 
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
         }
 
         public void JustUpdateProduct(int ProductID, int NewCategoryID, int NewSellerID, string NewProductName, string NewDescription, 
-            decimal NewReservePrice, int NewWinningOfferID, string NewComments)
+            decimal NewReservePrice, int? NewWinningOfferID, string NewComments)
         {
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("JustUpdateProduct", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@ProductID", ProductID);
 
+                    command.Parameters.AddWithValue("@CategoryID", NewCategoryID);
+                    command.Parameters.AddWithValue("@SellerID", NewSellerID);
+                    command.Parameters.AddWithValue("@ProductName", NewProductName);
+                    command.Parameters.AddWithValue("@Description", NewDescription);
+                    command.Parameters.AddWithValue("@ReservePrice", NewReservePrice);
+                    if (NewWinningOfferID.HasValue)
+                    {
+                        command.Parameters.AddWithValue("@WinningOfferID", NewWinningOfferID);
+                    }
+                    else
+                    {
+                        command.Parameters.AddWithValue("@WinningOfferID",
+                            DBNull.Value);
+                    }
+
+                    if (null != NewComments)
+                    {
+                        command.Parameters.AddWithValue("@Comments", NewComments);
+                    }
+                    else
+                    {
+                        command.Parameters.AddWithValue("@Comments", "");
+                    }
+
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
         }
 
         public int SafeUpdateProduct(int ProductID, int OldCategoryID, int OldSellerID, string OldProductName, string OldDescription,
-            decimal OldReservePrice, int OldWinningOfferID, string OldComments, int NewCategoryID, int NewSellerID, string NewProductName, string NewDescription,
-            decimal NewReservePrice, int NewWinningOfferID, string NewComments)
+            decimal OldReservePrice, int ?OldWinningOfferID, string OldComments, int NewCategoryID, int NewSellerID, string NewProductName, string NewDescription,
+            decimal NewReservePrice, int ?NewWinningOfferID, string NewComments)
         {
             int rv = 0;
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("SafeUpdateProduct", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@ProductID", ProductID);
+
+                    command.Parameters.AddWithValue("@NewCategoryID", NewCategoryID);
+                    command.Parameters.AddWithValue("@NewSellerID", NewSellerID);
+                    command.Parameters.AddWithValue("@NewProductName", NewProductName);
+                    command.Parameters.AddWithValue("@NewDescription", NewDescription);
+                    command.Parameters.AddWithValue("@NewReservePrice", NewReservePrice);
+                    if (NewWinningOfferID.HasValue)
+                    {
+                        command.Parameters.AddWithValue("@NewWinningOfferID", NewWinningOfferID);
+                    }
+                    else
+                    {
+                        command.Parameters.AddWithValue("@NewWinningOfferID",
+                            DBNull.Value);
+                    }
+
+                    if (null != NewComments)
+                    {
+                        command.Parameters.AddWithValue("@NewComments", NewComments);
+                    }
+                    else
+                    {
+                        command.Parameters.AddWithValue("@NewComments", "");
+                    }
+
+                    command.Parameters.AddWithValue("@OldCategoryID", OldCategoryID);
+                    command.Parameters.AddWithValue("@OldSellerID", OldSellerID);
+                    command.Parameters.AddWithValue("@OldProductName", OldProductName);
+                    command.Parameters.AddWithValue("@OldDescription", OldDescription);
+                    command.Parameters.AddWithValue("@OldReservePrice", OldReservePrice);
+                    if (OldWinningOfferID.HasValue)
+                    {
+                        command.Parameters.AddWithValue("@OldWinningOfferID", OldWinningOfferID);
+                    }
+                    else
+                    {
+                        command.Parameters.AddWithValue("@OldWinningOfferID",
+                            DBNull.Value);
+                    }
+
+                    if (null != OldComments)
+                    {
+                        command.Parameters.AddWithValue("@OldComments", OldComments);
+                    }
+                    else
+                    {
+                        command.Parameters.AddWithValue("@OldComments", "");
+                    }
+
+                    rv =  command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
+
             return rv;
         }
 
         public ProductDAL FindProductByID(int ProductID)
         {
             ProductDAL rv = null;
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("FindProductByID", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@ProductID", ProductID);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        ProductMapper mapper = new ProductMapper(reader);
+                        if (reader.Read())
+                        {
+                            rv = mapper.ToProduct(reader);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
             return rv;
         }
         public List<ProductDAL> GetProducts(int skip, int take)
         {
             List<ProductDAL> rv = new List<ProductDAL>();
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("GetProducts", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@skip", skip);
+                    command.Parameters.AddWithValue("@take", take);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        ProductMapper mapper = new ProductMapper(reader);
+                        while (reader.Read())
+                        {
+                            ProductDAL c = mapper.ToProduct(reader);
+                            rv.Add(c);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
             return rv;
         }
 
-        public List<ProductDAL> GetProductsRelatedToSeller(int SellerID)
+        public List<ProductDAL> GetProductsRelatedToSeller(int SellerID, int skip, int take)
         {
             List<ProductDAL> rv = new List<ProductDAL>();
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("GetProductsRelatedToSeller", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@skip", skip);
+                    command.Parameters.AddWithValue("@take", take);
+                    command.Parameters.AddWithValue("@SellerID", SellerID);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        ProductMapper mapper = new ProductMapper(reader);
+                        while (reader.Read())
+                        {
+                            ProductDAL c = mapper.ToProduct(reader);
+                            rv.Add(c);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
             return rv;
         }
-        public List<ProductDAL> GetProductsRelatedToSellerEMail(string EmailAddress)
+        public List<ProductDAL> GetProductsRelatedToSellerEMail(string EmailAddress, int skip, int take)
         {
             List<ProductDAL> rv = new List<ProductDAL>();
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("GetProductsRelatedToSeller", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@skip", skip);
+                    command.Parameters.AddWithValue("@take", take);
+                    command.Parameters.AddWithValue("@EMail", EmailAddress);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        ProductMapper mapper = new ProductMapper(reader);
+                        while (reader.Read())
+                        {
+                            ProductDAL c = mapper.ToProduct(reader);
+                            rv.Add(c);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
             return rv;
 
         }
-        public List<ProductDAL> GetProductsRelatedToCategory(int CategoryID)
+        public List<ProductDAL> GetProductsRelatedToCategory(int CategoryID,int skip, int take)
         {
             List<ProductDAL> rv = new List<ProductDAL>();
+            try
+            {
+                EnsureConnected();
+                using (SqlCommand command = new SqlCommand("GetProductsRelatedToSeller", Con))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@skip", skip);
+                    command.Parameters.AddWithValue("@take", take);
+                    command.Parameters.AddWithValue("@CategoryID", CategoryID);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        ProductMapper mapper = new ProductMapper(reader);
+                        while (reader.Read())
+                        {
+                            ProductDAL c = mapper.ToProduct(reader);
+                            rv.Add(c);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                throw;
+            }
             return rv;
 
         }
+
+  
+
+
+
 
 
 

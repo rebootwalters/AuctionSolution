@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionApp", "AuctionApp\Au
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{568051EC-2309-4791-8AC4-1E25BD75D63B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThrowAwayWebSite", "ThrowAwayWebSite\ThrowAwayWebSite.csproj", "{FDFA2EE8-A8E3-49CA-A667-9EE3712C2C36}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLogicLayer", "BusinessLogicLayer\BusinessLogicLayer.csproj", "{19A50022-76B0-4372-8CF1-F44CAD86639D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{568051EC-2309-4791-8AC4-1E25BD75D63B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{568051EC-2309-4791-8AC4-1E25BD75D63B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{568051EC-2309-4791-8AC4-1E25BD75D63B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDFA2EE8-A8E3-49CA-A667-9EE3712C2C36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDFA2EE8-A8E3-49CA-A667-9EE3712C2C36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDFA2EE8-A8E3-49CA-A667-9EE3712C2C36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDFA2EE8-A8E3-49CA-A667-9EE3712C2C36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19A50022-76B0-4372-8CF1-F44CAD86639D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19A50022-76B0-4372-8CF1-F44CAD86639D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19A50022-76B0-4372-8CF1-F44CAD86639D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19A50022-76B0-4372-8CF1-F44CAD86639D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
